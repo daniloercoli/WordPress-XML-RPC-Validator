@@ -1,0 +1,220 @@
+/* The Reset ---------------- */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {line-height: 1;}
+/* -------------------------- */
+
+body {
+	font-family: 'Helvetica',Arial,sans-serif;
+	color: #222;
+	font-size: 14px;
+	width: 100%;
+	background: #fff;
+}
+
+body.list {
+	background: #f2f2f2;
+}
+
+/* Global style */
+strong {
+	font-weight: bold;
+}
+cite,
+em,
+i {
+	font-style: italic;
+}
+table {
+	border: 1px solid #e7e7e7;
+	margin: 0 -1px 24px 0;
+	text-align: left;
+	width: 100%;
+}
+tr th,
+thead th {
+	color: #888;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 18px;
+	padding: 9px 24px;
+}
+tr td {
+	border-top: 1px solid #e7e7e7;
+	padding: 6px 24px;
+}
+tr.odd td {
+	background: #f2f7fc;
+}
+
+/* =Content
+-------------------------------------------------------------- */
+#lb_popup {
+	color:#3366FF;	
+	width:250px;
+	border:2px solid #0088CC;
+	background:#fdfdfd;
+	padding:4px 4px;
+	display:none;
+	position:absolute;
+}
+
+
+#xmlrpc_validator_main  {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 1.1em;
+	line-height: 1.3em;
+	padding: 10px 5px 0 5px;
+}
+
+/* Reader tabs */
+
+#xmlrpc_validator_tabs {
+	background: #fff;
+	position: relative;
+	overflow: hidden;
+	border-bottom: 3px solid #f2f2f2;
+	margin-bottom: 10px;
+}
+
+#xmlrpc_validator_tabs ul {
+	list-style: none;
+}
+
+#xmlrpc_validator_tabs li {
+	float: left;
+	width: 50%;
+}
+
+#xmlrpc_validator_tabs a {
+	display: block;
+	width: auto;
+	font-size: 15px;
+	line-height: 18px;
+	padding: 12px 8px;
+	height: 18px;
+	text-align: center;
+	background: #ddd;
+	color: #464646;
+	text-decoration: none;
+	-moz-text-shadow: 0 1px 0 #fff;
+	-o-text-shadow: 0 1px 0 #fff;
+	-webkit-text-shadow: 0 1px 0 #fff;
+	text-shadow: 0 1px 0 #fff;
+	
+	border-bottom: 1px solid #bbb;
+	background: #ccc;
+	position: relative;
+	
+	-webkit-tap-highlight-color: transparent;
+}
+
+	#xmlrpc_validator_tabs a:active {
+		background: #bbb;
+		-moz-box-shadow: inset 0 1px 5px rgba(0,0,0,.65);
+		-o-box-shadow: inset 0 1px 5px rgba(0,0,0,.65);
+		-webkit-box-shadow: inset 0 1px 5px rgba(0,0,0,.65);
+		box-shadow: inset 0 1px 5px rgba(0,0,0,.65);
+	}
+
+#xmlrpc_validator_tabs .active a {
+	border-bottom-color: #f2f2f2;
+	background: #f2f2f2 url(./img/fade.png) repeat-x;
+	z-index: 2;
+	/* padding: 14px 8px 10px; */
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,.65);
+	-o-box-shadow: 0 1px 3px rgba(0,0,0,.65);
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,.65);
+	box-shadow: 0 1px 3px rgba(0,0,0,.65);
+}
+
+
+
+/* status marker */
+
+ul.details li.detail-1:before, .tick:before {
+    color: green;
+    content: "✓";
+    margin-right: 1em;
+}
+
+ul.details li.detail-0:before, .cross:before {
+    color: red;
+    content: "✗";
+    margin-right: 1em;
+}
+
+.running:before {
+    color: blue;
+    content: "R";
+    margin-right: 1em;
+}
+
+.wait:before {
+    color: yellow;
+    content: "W";
+    margin-right: 1em;
+}
+
+
+
+/* loading indicator */
+
+input.loading, a.loading, button.loading, span.loading { outline: none !important; padding-right: 30px !important; background: url( img/w-loader.gif ) 97.5% 50% no-repeat !important;}
+span.loading { height: 16px;width:16px;display:inline-block;margin:3px 10px 0 4px !important;padding:0 !important; }
+
+
+
+/* error tooltip */
+
+div.tipcontainer { position: relative; }
+
+span.errortipwrap {
+	position: absolute;
+	top: -19px;
+	background: url( img/tiparrow.gif ) 6px bottom no-repeat;
+	padding-bottom: 9px;
+	display: none;
+	z-index: 999;
+	margin-left: 1px;
+}
+
+span.errortiptext {
+	background: #cf0000;
+	color: #fff;
+	padding: 4px 8px;
+	line-height: 1.1em;
+	font-size: 12px;
+	margin-top: 10px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+
+/* Error reporting */
+
+ul.xml_rpc_error { list-style-type: none; }
