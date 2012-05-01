@@ -1,2 +1,2 @@
 - We should a find a way to prevent the download of fake (maybe big) content from the net
-- 
+- Query/IP 1 hour limit?

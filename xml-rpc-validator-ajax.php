@@ -2,6 +2,7 @@
 //TODO remove these lines in production
 ini_set("display_errors", FALSE);
 
+
 if ( ! function_exists( 'add_action' ) ) {
 	require_once("../../../wp-config.php");
 	require_once 'commons.php';
@@ -45,6 +46,9 @@ if( 'check_wp_version' == $method_name) {
 	}
 } elseif ( 'wp.getComments' == $method_name) {
 	$result = $client->execute_call($method_name,  array('offset' => 0, 'number' => 10) );
+} elseif ( 'metaWeblog.newMediaObject' == $method_name) {
+	$pictureData = file_get_contents( constant( 'XMLRPC_VALIDATOR_PLUGIN_DIR' ).'/'.'test_picture.jpg' );
+	$result = $client->execute_call($method_name,  array('name' => mt_rand().'.jpg', 'type' => 'image/jpg', 'bits' => new IXR_Base64( $pictureData ) ) );
 } else {
 	$result = $client->execute_call($method_name);
 }

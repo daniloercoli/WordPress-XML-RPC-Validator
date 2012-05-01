@@ -17,6 +17,7 @@ var xml_rpc_validator = {
 			{'div_id': "get_post_status_list", 'xmlrpc_call':"wp.getPostStatusList"},
 			{'div_id': "get_comments", 'xmlrpc_call':"wp.getComments"},
 			{'div_id': "get_page_list", 'xmlrpc_call':"wp.getPageList"},
+			{'div_id': "upload_picture", 'xmlrpc_call':"metaWeblog.newMediaObject"},
 		],
 		current_call_index : 0,
 		
@@ -96,7 +97,7 @@ var xml_rpc_validator = {
 			xml_rpc_validator.request = jq.ajax({
 				    type: "POST",
 				    url: XML_RPC_Setting.plugin_url + 'xml-rpc-validator-ajax.php',
-				    timeout: 3000,				    
+				    timeout: 30000,				    
 				    data: {
 				    	xmlrpc_url: url,
 				        method_name : call_obj['xmlrpc_call'],

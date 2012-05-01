@@ -29,11 +29,11 @@ if ( 'home' == $action ) :
 			<p><label><?php _e('Enable HTTP Auth'); ?>
 			<input type="checkbox" name="enable_401_auth" value="yes" /></label></p>
 			<p><label><?php _e('Username'); ?><br />
-			<input type="text" name="HTTP_auth_user_login" id="HTTP_auth_user_login" class="input" value="editore" size="20" tabindex="200" />
+			<input type="text" name="HTTP_auth_user_login" id="HTTP_auth_user_login" class="input" value="" size="20" tabindex="200" />
 			</label>
 			</p>
 			<p><label><?php _e('Password'); ?><br />
-			<input type="password" name="HTTP_auth_user_pass" id="HTTP_auth_user_pass" class="input" value="cancello" size="20" tabindex="210" />
+			<input type="password" name="HTTP_auth_user_pass" id="HTTP_auth_user_pass" class="input" value="" size="20" tabindex="210" />
 			</label>
 			</p>
 		</fieldset>
@@ -90,10 +90,10 @@ elseif ( 'check_step1' == $action ) : //2nd page
 					<p>Please insert your credentials below to start a deep test on the blog. (Credentials will not be stored or sent to 3rd party sites)</p>
 					<?php if ( function_exists('wp_nonce_field') )	echo wp_nonce_field('checkstep2', 'name_of_nonce_field_checkstep2',true, false); ?>
 					<label><?php _e('Username'); ?>
-					<input type="text" name="user_login" id="user_login" class="input" value="editore" size="20" tabindex="20" /></label>
+					<input type="text" name="user_login" id="user_login" class="input" value="" size="20" tabindex="20" /></label>
 					<br />
 					<label><?php _e('Password'); ?>
-					<input type="password" name="user_pass" id="user_pass" class="input" value="cancello" size="20" tabindex="30" /></label>
+					<input type="password" name="user_pass" id="user_pass" class="input" value="" size="20" tabindex="30" /></label>
 					
 					<p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button-primary" value="<?php esc_attr_e('Check'); ?>" tabindex="1000" /></p>
 					<input type="hidden" name="site_url" value="<?php echo $site_url; ?>"/>
@@ -179,8 +179,11 @@ elseif ( 'check_step2' == $action ) : //3rd page
 						<p id="get_comments" class="wait">wp.getComments</p>
 						<p id="xml_rpc_error_get_comments" class="xml_rpc_error" style="display:none"></p>
 						
-						<p id="get_page_list" class="wait">getPageList</p>
+						<p id="get_page_list" class="wait">wp.getPageList</p>
 						<p id="xml_rpc_error_get_page_list" class="xml_rpc_error" style="display:none"></p>
+						
+						<p id="upload_picture" class="wait">metaWeblog.newMediaObject</p>
+						<p id="xml_rpc_error_upload_picture" class="xml_rpc_error" style="display:none"></p>
 						
 					<!-- just to test -->
 					<p>Another Round? <a href="#" onclick="jq('#xml_rpc_single_site_form').fadeIn('fast'); jq('#xmlrpc_validator_ajax_calls_response').fadeOut('fast');">yes</a>	

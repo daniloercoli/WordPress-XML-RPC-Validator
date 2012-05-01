@@ -645,10 +645,10 @@ class wp_xmlrpc_client  {
 		$length = $request->getLength();
 		$xml = $request->getXml();
 
-		$this->headers['Content-Type']	= 'application/xml';
+		$this->headers['Content-Type']	= 'text/xml';
 		$this->headers['User-Agent']	= $this->useragent;
 		$this->headers['Content-Length']= $length;
-		$this->headers['Accept'] = 'text/xml';
+		$this->headers['Accept'] = '*/*';
 
 		if(! empty($this->HTTP_auth_user_login)) {
 			xml_rpc_validator_logIO("I", "HTTP auth header set ".$this->HTTP_auth_user_login.':'.$this->HTTP_auth_user_pass);
@@ -661,7 +661,11 @@ class wp_xmlrpc_client  {
 		$requestParameter['body'] = $xml;
 		$requestParameter['timeout'] = REQUEST_HTTP_TIMEOUT;
 
-		xml_rpc_validator_logIO("I", "xmlrpc request: ". print_r ($requestParameter, TRUE));
+		
+		if ( strpos($method, 'metaWeblog.newMediaObject') === false ) //do not log the whole picture upload request document
+			xml_rpc_validator_logIO("I", "xmlrpc request: ". print_r ($requestParameter, TRUE));
+		else 
+			xml_rpc_validator_logIO("I", "xmlrpc request: ". print_r ( substr($xml, 0, 100) , TRUE));
 
 		$xmlrpc_request = new WP_Http;
 		$this->response = $xmlrpc_request->request( $this->URL, $requestParameter);
