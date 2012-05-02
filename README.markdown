@@ -17,8 +17,8 @@ This plugin does the following:
 
 = Steps Two
 - Get the user blogs
-- Start few xmlrpc calls on each blog and analyses the response (it checks for invalid characters for example)
-- Upload an small picture by using the metaWeblog.newMediaObject call (The picture is not published or attached to any post. but it will be available in the Media Library)
+- Start few XML-RPC calls and analyses the server response
+- Upload a small picture by using the metaWeblog.newMediaObject call (The picture is not published or attached to any post, but it will be available in the Media Library)
 
 ## External libs ##
 
