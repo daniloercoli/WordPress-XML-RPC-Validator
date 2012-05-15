@@ -107,7 +107,7 @@ class xml_rpc_validator_utils {
 			$date = gmdate("Y-m-d H:i:s ");
 			$iot = ($io == "I") ? " Input: " : " Output: ";
 			
-			$this->logging_buffer.= $date.$iot.esc_html($msg).'<br/><br/>';
+			$this->logging_buffer.= '<tr><td>'.$date.'</td><td>'.esc_html($msg).'</td></tr>';
 			
 			if ($this->logging_on_file) {
 				$fp = fopen( constant('XMLRPC_VALIDATOR_PLUGIN_DIR').'/validator.log',"a+" );
@@ -184,8 +184,8 @@ class xml_rpc_validator_utils {
 	}
 		 
 	function show_log_on_video( ) {
-		$content = $this->logging_buffer;
-
+		$content = '<table><tr><th>Date</th><th>Message</th></tr>'.$this->logging_buffer.'</table>';
+/*
 		$content .= 'array POST: <br/>';
 		while (list($chiave, $valore) = each($_POST)) {
 			$content .= "$chiave => $valore";
@@ -207,7 +207,7 @@ class xml_rpc_validator_utils {
 			}
 			$content .= '<br/>';
 		}
-
+*/
 		return $content;
 	}
 }

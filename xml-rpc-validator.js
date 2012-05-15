@@ -66,6 +66,16 @@ var xml_rpc_validator = {
 				return false;
 			}
 		},
+		check_credentials : function (  ) {
+			var user_login = jq('#user_login').val();
+			var user_pass = jq('#user_pass').val();
+			if ( user_pass.length > 0 && user_pass.trim() != "" &&  user_login.length > 0 && user_login.trim() != "")
+				return true;
+			else {
+				alert('Please, insert the Credentials...');
+				return false;
+			}
+		},
 		start_ajax_calls : function( ) {
 			jq('.running').removeClass('running').addClass('wait');
 			jq('.tick').removeClass('tick').addClass('wait');

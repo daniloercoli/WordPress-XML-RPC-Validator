@@ -21,11 +21,12 @@ if ( 'home' == $action ) :
 		<?php echo $nonce_content; ?>
 		<div class="tipcontainer"><span class="errortipwrap"><span class="errortiptext">Please Try Again</span></span></div>
 		<span id="url-loading" class="loading" style="display: none;"></span>
-		<input type='text' name='site_url' id='site_url' class='input' value='<?php echo /*$site_url;*/ 'http://localhost/wordpress31rc3/' ?>' size='30' tabindex='10' onclick="if ( this.value == 'Enter a blog URL' ) { this.value = 'http://'; }" onblur="if ( this.value == '' || this.value == 'http://' ) { this.value = 'Enter a blog URL'; }" />		
+		<input type='text' name='site_url' id='site_url' class='input' value='http://' size='30' tabindex='10' onclick="if ( this.value == 'Enter a blog URL' ) { this.value = 'http://'; }" onblur="if ( this.value == '' || this.value == 'http://' ) { this.value = 'Enter a blog URL'; }" />		
 		<input type="submit" name="wp-submit" id="wp-submit" class="button-primary" value="<?php esc_attr_e('Check');?>" />
 		<br />
+		<br />
 		<a href="" id="xmlrpc_validator_advanced_settings_switcher" onclick="xml_rpc_validator.toggle_advanced_settings( ); return false;">Show Connection Settings</a>
-		<fieldset id="xmlrpc_validator_advanced_settings" style="display:none"><legend>Http Authentication</legend>
+		<fieldset id="xmlrpc_validator_advanced_settings" style="display:none; margin-top:20px;"><legend>Http Authentication</legend>
 			<p><label><?php _e('Enable HTTP Auth'); ?>
 			<input type="checkbox" name="enable_401_auth" value="yes" /></label></p>
 			<p><label><?php _e('Username'); ?><br />
@@ -95,7 +96,7 @@ elseif ( 'check_step1' == $action ) : //2nd page
 					<label><?php _e('Password'); ?>
 					<input type="password" name="user_pass" id="user_pass" class="input" value="" size="20" tabindex="30" /></label>
 					
-					<p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button-primary" value="<?php esc_attr_e('Check'); ?>" tabindex="1000" /></p>
+					<p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button-primary" value="<?php esc_attr_e('Check'); ?>" onClick="return xml_rpc_validator.check_credentials();" tabindex="1000" /></p>
 					<input type="hidden" name="site_url" value="<?php echo $site_url; ?>"/>
 					<input type="hidden" name="xmlrpc_url" value="<?php echo ($xmlrpcEndpointURL); ?>"/>
 					<input type="hidden" name="action" value="check_step2"/>
