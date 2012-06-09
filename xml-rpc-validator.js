@@ -114,6 +114,7 @@ var xml_rpc_validator = {
 				        _ajax_nonce: XML_RPC_Setting.nonce,
 				        user_login: jq( '#user_login').val(),
 						user_pass: jq( '#user_pass').val(),
+						user_agent: jq( '#user_agent').val(),
 						enable_401_auth: jq( '#enable_401_auth').val(),
 						HTTP_auth_user_login: jq( '#HTTP_auth_user_login').val(),
 						HTTP_auth_user_pass: jq( '#HTTP_auth_user_pass').val()

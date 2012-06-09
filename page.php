@@ -24,6 +24,18 @@ if ( 'home' == $action ) :
 		<input type='text' name='site_url' id='site_url' class='input' value='http://' size='30' tabindex='10' onclick="if ( this.value == 'Enter a blog URL' ) { this.value = 'http://'; }" onblur="if ( this.value == '' || this.value == 'http://' ) { this.value = 'Enter a blog URL'; }" />		
 		<input type="submit" name="wp-submit" id="wp-submit" class="button-primary" value="<?php esc_attr_e('Check');?>" />
 		<br />
+		<p>
+		<label><?php _e('User Agent'); ?>
+			<select name='user_agent'>
+			  <option selected="selected" value="WordPress XML-RPC Client">WordPress XML-RPC Client</option>
+			  <option value="wp-android/2.0">WordPress for Android</option>
+			  <option value="wp-blackberry/1.6">WordPress for BlackBerry</option>
+			  <option value="wp-iphone/3.0">WordPress for iOS</option>
+			  <option value="wp-nokia/1.0">WordPress for Nokia</option>
+			  <option value="wp-windowsphone/1.5">WordPress for Windows Phone7</option>
+			</select>
+		</label>
+		</p>
 		<br />
 		<a href="" id="xmlrpc_validator_advanced_settings_switcher" onclick="xml_rpc_validator.toggle_advanced_settings( ); return false;">Show Connection Settings</a>
 		<fieldset id="xmlrpc_validator_advanced_settings" style="display:none; margin-top:20px;"><legend>Http Authentication</legend>
@@ -69,7 +81,10 @@ elseif ( 'check_step1' == $action ) : //2nd page
 		else :
 			$client = new Blog_Validator( esc_url_raw( $_REQUEST['site_url'] ) );
 			$site_url = esc_url($unescaped_site_url);
-		
+			//Set the UserAgent
+			$user_agent_selected = esc_attr( $_REQUEST['user_agent'] );
+			$client -> setUserAgent($user_agent_selected);
+			//Enable the HTTP Auth if selected
 			$enable_401_auth= ! empty( $_REQUEST['enable_401_auth'] );
 			if($enable_401_auth) {
 				xml_rpc_validator_logIO("O", "HTTP auth enabled");
@@ -77,7 +92,7 @@ elseif ( 'check_step1' == $action ) : //2nd page
 				$HTTP_auth_user_pass = stripslashes( $_REQUEST['HTTP_auth_user_pass'] );
 				$client -> setHTTPCredential( $HTTP_auth_user_login, $HTTP_auth_user_pass );
 			}
-		
+			
 			$xmlrpcEndpointURL = $client->find_and_validate_xmlrpc_endpoint();
 				
 			if( is_wp_error( $xmlrpcEndpointURL ) ) {
@@ -100,6 +115,7 @@ elseif ( 'check_step1' == $action ) : //2nd page
 					<input type="hidden" name="site_url" value="<?php echo $site_url; ?>"/>
 					<input type="hidden" name="xmlrpc_url" value="<?php echo ($xmlrpcEndpointURL); ?>"/>
 					<input type="hidden" name="action" value="check_step2"/>
+					<input type="hidden" name="user_agent" value="<?php echo ($user_agent_selected); ?>"/>
 		
 				<?php if ( $enable_401_auth ) { ?>
 					<input type="hidden" name="enable_401_auth" value="yes" />
@@ -124,7 +140,10 @@ elseif ( 'check_step2' == $action ) : //3rd page
 		$client = new Blog_Validator( esc_url_raw ( $site_url ) );
 		$client->xmlrpc_endpoint_URL = esc_url_raw ( $xmlrpc_url );
 		$client->setWPCredential( $_REQUEST['user_login'], $_REQUEST['user_pass'] );
-	
+		//Set the UserAgent
+		$user_agent_selected = esc_attr( $_REQUEST['user_agent'] );
+		$client -> setUserAgent($user_agent_selected);
+		//Enable HTTP Auth if selected
 		$enable_401_auth = ! empty( $_REQUEST['enable_401_auth'] );
 		if($enable_401_auth) {
 			xml_rpc_validator_logIO("O", "HTTP auth enabled");
@@ -148,6 +167,8 @@ elseif ( 'check_step2' == $action ) : //3rd page
 				<input type="hidden" name="user_pass" id="user_pass" value="<?php esc_attr_e($_REQUEST['user_pass']); ?>"/>
 				<input type="hidden" name="site_url" value="<?php echo esc_url( $site_url ); ?>"/>
 				<input type="hidden" name="xmlrpc_url" value="<?php echo esc_url($xmlrpc_url); ?>"/>
+				<input type="hidden" name="user_agent" id="user_agent" value="<?php echo ($user_agent_selected); ?>"/>
+				
 				<?php if ($enable_401_auth){ ?>
 					<input type="hidden" id="enable_401_auth" name="enable_401_auth" value="yes" />
 					<input type="hidden" id="HTTP_auth_user_login" name="HTTP_auth_user_login" value="<?php esc_attr_e($_REQUEST['HTTP_auth_user_login']); ?>" />

@@ -25,6 +25,10 @@ $user_login = strip_tags(stripslashes($_POST['user_login']));
 $user_pass = strip_tags(stripslashes($_POST['user_pass']));
 $client->setWPCredential($user_login, $user_pass);
 
+//Set the UserAgent
+$user_agent_selected = esc_attr( $_REQUEST['user_agent'] );
+$client -> setUserAgent( $user_agent_selected );
+
 $enable_401_auth = ! empty( $_POST['enable_401_auth'] );
 if($enable_401_auth) {
 	xml_rpc_validator_logIO("O", "HTTP auth enabled");

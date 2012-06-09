@@ -185,8 +185,8 @@ class xml_rpc_validator_utils {
 		 
 	function show_log_on_video( ) {
 		$content = '<table><tr><th>Date</th><th>Message</th></tr>'.$this->logging_buffer.'</table>';
-/*
-		$content .= 'array POST: <br/>';
+
+/*		$content .= 'array POST: <br/>';
 		while (list($chiave, $valore) = each($_POST)) {
 			$content .= "$chiave => $valore";
 			$content .= '<br/>';
@@ -243,7 +243,9 @@ class Blog_Validator {
 	var	$HTTP_auth_user_login;
 	var	$HTTP_auth_user_pass;
 
-
+	//The user agent to set on requestes
+	var $user_agent = USER_AGENT;
+	
 	function Blog_Validator ($URL) {
 		$this->site_URL = $URL;
 	}
@@ -258,12 +260,16 @@ class Blog_Validator {
 		$this->HTTP_auth_user_pass = $pass;
 	}
 
+	function setUserAgent ( $ua ) {
+		$this->user_agent= $ua;
+	}
+	
 	function getUsersBlogs() { 
 
 		if( ! empty( $this->user_login ) ) {
 
 			//starts with real xmlrpc calls
-			$client = new wp_xmlrpc_client($this->xmlrpc_endpoint_URL);
+			$client = new wp_xmlrpc_client( $this->xmlrpc_endpoint_URL, false, $this->user_agent );
 
 			if(! empty($this->HTTP_auth_user_login)) {
 				$client->setHTTPCredential($this->HTTP_auth_user_login, $this->HTTP_auth_user_pass);
@@ -282,7 +288,7 @@ class Blog_Validator {
 	function execute_call( $method_name, $parameters = NULL ) { 
 
 		if(! empty($this->user_login)) {
-			$client = new wp_xmlrpc_client($this->xmlrpc_endpoint_URL);
+			$client = new wp_xmlrpc_client( $this->xmlrpc_endpoint_URL, false, $this->user_agent );
 
 			if(! empty($this->HTTP_auth_user_login)) {
 				$client->setHTTPCredential($this->HTTP_auth_user_login, $this->HTTP_auth_user_pass);
@@ -315,7 +321,7 @@ class Blog_Validator {
 		} else {
 			//try to guess the endpoint by appending the xmlrpc.php prefix
 			xml_rpc_validator_logIO("O", "try to guess the endpoint by appending the xmlrpc.php prefix");
-			$client = new wp_xmlrpc_client( rtrim($this->site_URL,' /').'/xmlrpc.php' );
+			$client = new wp_xmlrpc_client( rtrim($this->site_URL,' /').'/xmlrpc.php', false, $this->user_agent );
 			if( ! empty( $this->HTTP_auth_user_login ) ) {
 				$client->setHTTPCredential($this->HTTP_auth_user_login, $this->HTTP_auth_user_pass);
 			}
@@ -355,7 +361,7 @@ class Blog_Validator {
 		}
 		
 		xml_rpc_validator_logIO("O", "Starting a dummy XML-RPC call using test/test as credentials");
-		$client = new wp_xmlrpc_client( $this->xmlrpc_endpoint_URL );
+		$client = new wp_xmlrpc_client( $this->xmlrpc_endpoint_URL, false, $this->user_agent );
 
 		if( ! empty( $this->HTTP_auth_user_login ) ) {
 			$client->setHTTPCredential($this->HTTP_auth_user_login, $this->HTTP_auth_user_pass);
@@ -470,7 +476,7 @@ class Blog_Validator {
 		xml_rpc_validator_logIO("I", 'Opening URL '.$URL);
 
 		$headers = array();
-		$headers['User-Agent']	= USER_AGENT;
+		$headers['User-Agent']	= $this->user_agent;
 		if(! empty($this->HTTP_auth_user_login)) {
 			xml_rpc_validator_logIO("I", "HTTP auth header set ".$this->HTTP_auth_user_login.':'.$this->HTTP_auth_user_pass);
 			$headers['Authorization'] = 'Basic '.base64_encode($this->HTTP_auth_user_login.':'.$this->HTTP_auth_user_pass);
@@ -517,7 +523,7 @@ class Blog_Validator {
 	private function  checkAvailableMethods() {
 		global $xml_rpc_validator_errors;
 		
-		$client = new wp_xmlrpc_client($this->xmlrpc_endpoint_URL);
+		$client = new wp_xmlrpc_client($this->xmlrpc_endpoint_URL, false, $this->user_agent );
 
 		if(! empty($this->HTTP_auth_user_login)) {
 			$client->setHTTPCredential($this->HTTP_auth_user_login, $this->HTTP_auth_user_pass);
@@ -631,9 +637,16 @@ class wp_xmlrpc_client  {
 	function wp_xmlrpc_client($URL, $timeout = false, $useragent = false) {
 		$this->URL = $URL;
 		$this->timeout = $timeout;
-		if (!$useragent) {
-			 $this->useragent = USER_AGENT;
-		}
+
+		if ( $timeout === false ) {
+			$this->timeout = REQUEST_HTTP_TIMEOUT;
+		} else
+			$this->timeout = $timeout;
+
+		if ( $useragent === false ) {
+			$this->useragent = USER_AGENT;
+		} else
+			$this->useragent = $useragent;
 	}
 
 	function open() {
