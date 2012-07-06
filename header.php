@@ -29,18 +29,10 @@ wp_head();
 ?>
 </head>
 <body <?php body_class(); ?>>
-	<div id="page-wrap">
-	
-	<!--  put other elements here -->
-	
-		<div id="content">
-			<div id="xmlrpc_validator_tabs">
-				<ul id="actions">
-					<li id="action-main" class="action active"><a href="" onclick="xml_rpc_validator.show_main( ); return false;">Validator</a>
-					</li>
-					<li id="action-log" class="action"><a href="" onclick="xml_rpc_validator.show_log( ); return false;">Log Screen</a>
-					</li>
-				</ul>
-			</div>
-
-			<div class="clearer"></div>
+	<div id="banner">
+		<h1 id="title">
+			<a href="<?php echo get_permalink( get_the_ID() ); ?>"><span>WordPress XML-RPC Validation Service</span> </a>
+		</h1>
+		<p id="tagline">Check the XML-RPC Endpoint of your site</p>
+	</div>
+	<div id="content">

@@ -21,35 +21,43 @@ if ( 'home' == $action ) :
 		<?php echo $nonce_content; ?>
 		<div class="tipcontainer"><span class="errortipwrap"><span class="errortiptext">Please Try Again</span></span></div>
 		<span id="url-loading" class="loading" style="display: none;"></span>
-		<input type='text' name='site_url' id='site_url' class='input' value='http://' size='30' tabindex='10' onclick="if ( this.value == 'Enter a blog URL' ) { this.value = 'http://'; }" onblur="if ( this.value == '' || this.value == 'http://' ) { this.value = 'Enter a blog URL'; }" />		
-		<input type="submit" name="wp-submit" id="wp-submit" class="button-primary" value="<?php esc_attr_e('Check');?>" />
-		<br />
 		<p>
-		<label><?php _e('User Agent'); ?>
-			<select name='user_agent'>
-			  <option selected="selected" value="WordPress XML-RPC Client">WordPress XML-RPC Client</option>
-			  <option value="wp-android/2.0">WordPress for Android</option>
-			  <option value="wp-blackberry/1.6">WordPress for BlackBerry</option>
-			  <option value="wp-iphone/3.0">WordPress for iOS</option>
-			  <option value="wp-nokia/1.0">WordPress for Nokia</option>
-			  <option value="wp-windowsphone/1.5">WordPress for Windows Phone7</option>
-			</select>
-		</label>
+			<label for="site_url" title="Address of site to Validate">Address:</label>
+			<input type='text' name='site_url' id='site_url' class='input' value='http://' size='30' tabindex='10'/>		
 		</p>
-		<br />
-		<a href="" id="xmlrpc_validator_advanced_settings_switcher" onclick="xml_rpc_validator.toggle_advanced_settings( ); return false;">Show Connection Settings</a>
-		<fieldset id="xmlrpc_validator_advanced_settings" style="display:none; margin-top:20px;"><legend>Http Authentication</legend>
-			<p><label><?php _e('Enable HTTP Auth'); ?>
-			<input type="checkbox" name="enable_401_auth" value="yes" /></label></p>
-			<p><label><?php _e('Username'); ?><br />
-			<input type="text" name="HTTP_auth_user_login" id="HTTP_auth_user_login" class="input" value="" size="20" tabindex="200" />
-			</label>
+		<br/>
+		<a href="" id="xmlrpc_validator_advanced_settings_switcher" onclick="xml_rpc_validator.toggle_advanced_settings( ); return false;">More Options</a>
+		<fieldset id="xmlrpc_validator_advanced_settings" style="display:none; margin-top:10px;">
+			<p>
+			<label for="user_agent"><?php _e('User Agent'); ?></label>
+				<select name='user_agent'>
+				  <option selected="selected" value="WordPress XML-RPC Client">WordPress XML-RPC Client</option>
+				  <option value="wp-android/2.0">WordPress for Android</option>
+				  <option value="wp-blackberry/1.6">WordPress for BlackBerry</option>
+				  <option value="wp-iphone/3.0">WordPress for iOS</option>
+				  <option value="wp-nokia/1.0">WordPress for Nokia</option>
+				  <option value="wp-windowsphone/1.5">WordPress for Windows Phone7</option>
+				</select>
 			</p>
-			<p><label><?php _e('Password'); ?><br />
-			<input type="password" name="HTTP_auth_user_pass" id="HTTP_auth_user_pass" class="input" value="" size="20" tabindex="210" />
-			</label>
+			<br/>
+			<p>
+				<label for="enable_401_auth"><?php _e('Enable HTTP Auth'); ?></label>
+				<input type="checkbox" name="enable_401_auth" value="yes" />
+			</p>
+			<p>
+				<label for="HTTP_auth_user_login"><?php _e('Username'); ?></label>
+				<input type="text" name="HTTP_auth_user_login" id="HTTP_auth_user_login" class="input" value="" size="20" tabindex="200" />
+			</p>
+			<p>
+				<label for="HTTP_auth_user_pass"><?php _e('Password'); ?></label>
+				<input type="password" name="HTTP_auth_user_pass" id="HTTP_auth_user_pass" class="input" value="" size="20" tabindex="210" />
 			</p>
 		</fieldset>
+		
+		<p class="submit_button">
+			<input type="submit" name="wp-submit" id="wp-submit" value="<?php esc_attr_e('Check');?>" />
+		</p>
+		
 		<input type="hidden" name="action" value="check_step1"/>
 	</form>
 <?php 
@@ -105,13 +113,18 @@ elseif ( 'check_step1' == $action ) : //2nd page
 				<form name="credentialInfoform" id="credentialInfoform" action="#" method="post">
 					<p>Please insert your credentials below to start a deep test on the blog. (Credentials will not be stored or sent to 3rd party sites)</p>
 					<?php if ( function_exists('wp_nonce_field') )	echo wp_nonce_field('checkstep2', 'name_of_nonce_field_checkstep2',true, false); ?>
-					<label><?php _e('Username'); ?>
-					<input type="text" name="user_login" id="user_login" class="input" value="" size="20" tabindex="20" /></label>
-					<br />
-					<label><?php _e('Password'); ?>
-					<input type="password" name="user_pass" id="user_pass" class="input" value="" size="20" tabindex="30" /></label>
-					
-					<p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button-primary" value="<?php esc_attr_e('Check'); ?>" onClick="return xml_rpc_validator.check_credentials();" tabindex="1000" /></p>
+					<p>
+						<label for="user_login"><?php _e('Username'); ?></label>
+						<input type="text" name="user_login" id="user_login" class="input" value="" size="20" tabindex="20" />
+					</p>
+					<p>
+						<label for="user_pass"><?php _e('Password'); ?></label>
+						<input type="password" name="user_pass" id="user_pass" class="input" value="" size="20" tabindex="30" />
+					</p>
+					<p class="submit_button">
+						<input type="submit" name="wp-submit" id="wp-submit" class="button-primary" value="<?php esc_attr_e('Check'); ?>" onClick="return xml_rpc_validator.check_credentials();" tabindex="1000" />
+					</p>
+
 					<input type="hidden" name="site_url" value="<?php echo $site_url; ?>"/>
 					<input type="hidden" name="xmlrpc_url" value="<?php echo ($xmlrpcEndpointURL); ?>"/>
 					<input type="hidden" name="action" value="check_step2"/>
@@ -126,8 +139,6 @@ elseif ( 'check_step1' == $action ) : //2nd page
 			<?php } ?>
 		<?php 
 		endif; 
-		?><a href="<?php echo $permalink; ?>">Home</a> <?php 
-		
 elseif ( 'check_step2' == $action ) : //3rd page 
 	$permalink = get_permalink( get_the_ID() );
 	
@@ -160,7 +171,7 @@ elseif ( 'check_step2' == $action ) : //3rd page
 				<form name="xml_rpc_single_site_form" id="xml_rpc_single_site_form" action="#" method="post" onsubmit="return false;">
 				<p>Please select the blog you wanna test:</p>	
 				<?php foreach ($client->userBlogs as $blog) {
-					echo '<input type="radio" name="single_site_xmlrpc_url" value="'.$blog['xmlrpc'].'">'.$blog['blogName'].' - '.$blog['xmlrpc'].'</input></br>';
+					echo '<p><input type="radio" name="single_site_xmlrpc_url" value="'.$blog['xmlrpc'].'">'.$blog['blogName'].' - '.$blog['xmlrpc'].'</input></p>';
 				}//end foreach
 				?>
 				<input type="hidden" name="user_login" id="user_login" value="<?php esc_attr_e($_REQUEST['user_login']); ?>"/>
@@ -174,9 +185,8 @@ elseif ( 'check_step2' == $action ) : //3rd page
 					<input type="hidden" id="HTTP_auth_user_login" name="HTTP_auth_user_login" value="<?php esc_attr_e($_REQUEST['HTTP_auth_user_login']); ?>" />
 					<input type="hidden" id="HTTP_auth_user_pass" name="HTTP_auth_user_pass" value="<?php esc_attr_e($_REQUEST['HTTP_auth_user_pass']) ?>" />
 				<?php } ?>
-				<p class="submit">
-				<input type="submit" name="xml_rpc_single_site_form-submit" id="xml_rpc_single_site_form-submit" 
-				class="button-primary" value="<?php esc_attr_e('Check') ?>" tabindex="1000"/>
+				<p class="submit_button">
+				<input type="submit" name="xml_rpc_single_site_form-submit" id="xml_rpc_single_site_form-submit" class="button-primary" value="<?php esc_attr_e('Check') ?>" tabindex="1000"/>
 				</p>
 				</form>
 				<div id="xmlrpc_validator_ajax_calls_response" style="display:none">
@@ -207,18 +217,15 @@ elseif ( 'check_step2' == $action ) : //3rd page
 						<p id="upload_picture" class="wait">metaWeblog.newMediaObject</p>
 						<p id="xml_rpc_error_upload_picture" class="xml_rpc_error" style="display:none"></p>
 						
-					<!-- just to test -->
-					<p>Another Round? <a href="#" onclick="jq('#xml_rpc_single_site_form').fadeIn('fast'); jq('#xmlrpc_validator_ajax_calls_response').fadeOut('fast');">yes</a>	
+					<!-- just to test 
+					<p>Another Round? <a href="#" onclick="jq('#xml_rpc_single_site_form').fadeIn('fast'); jq('#xmlrpc_validator_ajax_calls_response').fadeOut('fast');">yes</a>
+					-->	
 				</div>
 			<?php 
 			}
 		}
-		?><a href="<?php echo $permalink; ?>">Home</a> <?php 
 	endif;
 	
 endif; ?>
 </div> 
-<div id="xmlrpc_validator_log" style="display: none">
-<?php echo $xml_rpc_validator_utils->show_log_on_video( ); ?>
-</div>
 <?php include( dirname(__FILE__) . '/footer.php' );  ?>
