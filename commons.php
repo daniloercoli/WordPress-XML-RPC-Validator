@@ -7,6 +7,33 @@ require_once( 'UserAgentInfo.php' );
 
 include_once(ABSPATH . WPINC . '/class-IXR.php');
 
+//Remove the generator tag
+function rm_generator_filter() { return '<meta name="generator" content="Eritreo v0.1" />'; }
+add_filter('the_generator', 'rm_generator_filter');
+
+//Remove WLW and RSD Link
+remove_action('wp_head', 'wlwmanifest_link');
+remove_action('wp_head', 'rsd_link');
+
+/**
+ * disable feed
+ */
+function fb_disable_feed() {
+	wp_die( __('No feed available, please visit our <a href="'. get_bloginfo('url') .'">homepage</a>!') );
+}
+add_action('do_feed', 'fb_disable_feed', 1);
+add_action('do_feed_rdf', 'fb_disable_feed', 1);
+add_action('do_feed_rss', 'fb_disable_feed', 1);
+add_action('do_feed_rss2', 'fb_disable_feed', 1);
+add_action('do_feed_atom', 'fb_disable_feed', 1);
+remove_action( 'wp_head', 'feed_links_extra', 3 );
+remove_action( 'wp_head', 'feed_links', 2 );
+remove_action( 'wp_head', 'rsd_link' );
+
+//Remove link rel=’prev’ and link rel=’next’ from Head
+remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0 );
+
+
 define("USER_AGENT", 'WordPress XML-RPC Client');
 define("REQUEST_HTTP_TIMEOUT", 30); //30 secs timeout for HTTP request
 
