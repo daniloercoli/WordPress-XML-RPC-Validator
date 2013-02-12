@@ -571,10 +571,10 @@ class Blog_Validator {
 			'wp.getTags', 'wp.getCategories', 'wp.getAuthors', 'wp.getPageList', 'wp.editPage', 'wp.deletePage',
 			'wp.newPage', 'wp.getPages', 'mt.publishPost', 'mt.getTrackbackPings',
 			'mt.supportedTextFilters', 'mt.supportedMethods', 'mt.setPostCategories', 'mt.getPostCategories',
-			'mt.getRecentPostTitles', 'mt.getCategoryList', 'metaWeblog.getUsersBlogs', 'metaWeblog.setTemplate',
-			'metaWeblog.getTemplate', 'metaWeblog.deletePost', 'metaWeblog.newMediaObject', 'metaWeblog.getCategories',
+			'mt.getRecentPostTitles', 'mt.getCategoryList', 'metaWeblog.getUsersBlogs',
+			'metaWeblog.deletePost', 'metaWeblog.newMediaObject', 'metaWeblog.getCategories',
 			'metaWeblog.getRecentPosts', 'metaWeblog.getPost', 'metaWeblog.editPost', 'metaWeblog.newPost',
-			'blogger.deletePost', 'blogger.editPost', 'blogger.newPost', 'blogger.setTemplate', 'blogger.getTemplate',
+			'blogger.deletePost', 'blogger.editPost', 'blogger.newPost',
 			'blogger.getRecentPosts', 'blogger.getPost', 'blogger.getUserInfo', 'blogger.getUsersBlogs');
 
 			$result = array_diff($standardCall, $xmlArray); //Returns an array containing all the entries from array1 that are not present in any of the other arrays.
