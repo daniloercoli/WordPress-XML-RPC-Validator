@@ -15,7 +15,7 @@ if ( 'home' == $action ) :
 	else
 		$nonce_content = '';
 				
-	$site_url =  isset( $_REQUEST['site_url'] ) ? esc_url ( $_REQUEST['site_url'] ) : 'Enter a blog URL';	
+	$site_url =  isset( $_REQUEST['site_url'] ) ? esc_url ( $_REQUEST['site_url'] ) : 'http://';	
 ?>
 	<form name="loginform" id="loginform" action="#" method="post" onSubmit="return xml_rpc_validator.check_url();">
 		<?php echo $nonce_content; ?>
@@ -23,7 +23,7 @@ if ( 'home' == $action ) :
 		<span id="url-loading" class="loading" style="display: none;"></span>
 		<p>
 			<label for="site_url" title="Address of site to Validate">Address:</label>
-			<input type='text' name='site_url' id='site_url' class='input' value='http://' size='30' tabindex='10'/>		
+			<input type='text' name='site_url' id='site_url' class='input' value='<?php echo $site_url; ?>' size='30' tabindex='10'/>		
 		</p>
 		<br/>
 		<a href="" id="xmlrpc_validator_advanced_settings_switcher" onclick="xml_rpc_validator.toggle_advanced_settings( ); return false;">More Options</a>
