@@ -3,8 +3,19 @@ var jq = jQuery;
 // setup everything when document is ready
 jq(document).ready(function($) {
 	jq('#xml_rpc_single_site_form-submit').click( xml_rpc_validator.start_ajax_calls );
+	jq('select#user_agent_selection').change(function(){ //the event here is change
+		if (jq(this).val() === "custom" ) //check the value into the select
+		{
+			//jq('input#user_agent').removeAttr('disabled');
+			jq('input#user_agent').val("");
+		}
+		else
+		{
+			//jq('input#user_agent').attr('disabled','disabled');
+			jq('input#user_agent').val(jq(this).val());
+		}
+	});
 });
-
 
 var xml_rpc_validator = {
 		request: false,
