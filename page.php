@@ -15,7 +15,7 @@ if ( 'home' == $action ) :
 	else
 		$nonce_content = '';
 				
-	$site_url =  isset( $_REQUEST['site_url'] ) ? esc_url ( $_REQUEST['site_url'] ) : 'http://';	
+	$site_url =  isset( $_REQUEST['site_url'] ) ? esc_url( $_REQUEST['site_url'] ) : 'http://';
 ?>
 	<form name="loginform" id="loginform" action="#" method="post" onSubmit="return xml_rpc_validator.check_url();">
 		<?php echo $nonce_content; ?>
@@ -26,29 +26,40 @@ if ( 'home' == $action ) :
 			<input type='text' name='site_url' id='site_url' class='input' value='<?php echo $site_url; ?>' size='30' tabindex='10'/>		
 		</p>
 		<br/>
-		<a href="" id="xmlrpc_validator_advanced_settings_switcher" onclick="xml_rpc_validator.toggle_advanced_settings( ); return false;">More Options</a>
-		<fieldset id="xmlrpc_validator_advanced_settings" style="display:none; margin-top:10px;">
+		<!-- a href="" id="xmlrpc_validator_advanced_settings_switcher" onclick="xml_rpc_validator.toggle_advanced_settings( ); return false;">More Options</a -->
+		<fieldset id="xmlrpc_validator_advanced_settings" style="margin-top:10px;">
 			<p>
-			<label for="user_agent"><?php _e('User Agent'); ?></label>
-				<select name='user_agent'>
+			<label for="user_agent_selection"><?php _e('User Agent'); ?></label>
+				<select id="user_agent_selection">
+				  <?php if (!isset($_REQUEST['user_agent'])) { ?>
+				  <option value="custom">Custom User Agent</option>
 				  <option selected="selected" value="WordPress XML-RPC Client">WordPress XML-RPC Client</option>
-				  <option value="wp-android/2.0">WordPress for Android</option>
+				  <?php } else { ?>
+				  <option selected="selected" value="">Custom User Agent</option>
+				  <option value="WordPress XML-RPC Client">WordPress XML-RPC Client</option>
+                  <?php } ?>
+				  <option value="wp-android/2.6.4 (Android 4.3; en_US; samsung GT-I9505/jfltezh)">WordPress for Android</option>
+				  <option value="wp-iphone/4.8.1 (iPhone OS 8.1.3, iPad) Mobile">WordPress for iOS</option>
 				  <option value="wp-blackberry/1.6">WordPress for BlackBerry</option>
-				  <option value="wp-iphone/3.0">WordPress for iOS</option>
 				  <option value="wp-nokia/1.0">WordPress for Nokia</option>
 				  <option value="wp-windowsphone/1.5">WordPress for Windows Phone7</option>
 				</select>
+				<?php if (!isset($_REQUEST['user_agent'])) { ?>
+					<input type='text' name='user_agent' id='user_agent' class='input' value='WordPress XML-RPC Client/1.1' size='70' tabindex='10'/>
+				<?php } else { ?>
+					<input type='text' name='user_agent' id='user_agent' class='input' value='<?php echo esc_attr($_REQUEST['user_agent']); ?>' size='70' tabindex='10'/>
+				<?php } ?>
 			</p>
 			<br/>
 			<p>
 				<label for="enable_401_auth"><?php _e('Enable HTTP Auth'); ?></label>
 				<input type="checkbox" name="enable_401_auth" value="yes" />
 			</p>
-			<p>
+			<p style="margin-top:10px">
 				<label for="HTTP_auth_user_login"><?php _e('Username'); ?></label>
 				<input type="text" name="HTTP_auth_user_login" id="HTTP_auth_user_login" class="input" value="" size="20" tabindex="200" />
 			</p>
-			<p>
+			<p style="margin-top:10px;margin-bottom:10px;">
 				<label for="HTTP_auth_user_pass"><?php _e('Password'); ?></label>
 				<input type="password" name="HTTP_auth_user_pass" id="HTTP_auth_user_pass" class="input" value="" size="20" tabindex="210" />
 			</p>
@@ -108,16 +119,17 @@ elseif ( 'check_step1' == $action ) : //2nd page
 				<?php echo $xml_rpc_validator_utils->printErrors($xmlrpcEndpointURL); 
 			} else {
 				$xmlrpcEndpointURL = esc_url($xmlrpcEndpointURL);
-				?><p class="tick">Congratulation! Your site passed the first check.
-				<br />You can add the blog within the mobile app using the following URL: <em><?php echo ($xmlrpcEndpointURL); ?></em></p>
+				?><p class="tick"style="margin-bottom:10px;"><b>Congratulation! Your site passed the first check.</b>
+				<br /><br />You can add the blog within the mobile app using the following URL: <em><?php echo ($xmlrpcEndpointURL); ?></em>
+				</p>
 				<form name="credentialInfoform" id="credentialInfoform" action="#" method="post">
-					<p>Please insert your credentials below to start a deep test on the blog. (Credentials will not be stored or sent to 3rd party sites)</p>
+					<p>Please insert your credentials below to start a deep test of the blog. (Credentials will not be stored or sent to 3rd party sites)</p>
 					<?php if ( function_exists('wp_nonce_field') )	echo wp_nonce_field('checkstep2', 'name_of_nonce_field_checkstep2',true, false); ?>
-					<p>
+					<p style="margin-top:10px">
 						<label for="user_login"><?php _e('Username'); ?></label>
 						<input type="text" name="user_login" id="user_login" class="input" value="" size="20" tabindex="20" />
 					</p>
-					<p>
+					<p style="margin-top:10px;margin-bottom:10px;">
 						<label for="user_pass"><?php _e('Password'); ?></label>
 						<input type="password" name="user_pass" id="user_pass" class="input" value="" size="20" tabindex="30" />
 					</p>
@@ -171,7 +183,7 @@ elseif ( 'check_step2' == $action ) : //3rd page
 				<form name="xml_rpc_single_site_form" id="xml_rpc_single_site_form" action="#" method="post" onsubmit="return false;">
 				<p>Please select the blog you wanna test:</p>	
 				<?php foreach ($client->userBlogs as $blog) {
-					echo '<p><input type="radio" name="single_site_xmlrpc_url" value="'.$blog['xmlrpc'].'">'.$blog['blogName'].' - '.$blog['xmlrpc'].'</input></p>';
+					echo '<p style="margin-top:10px"><input type="radio" name="single_site_xmlrpc_url" value="'.$blog['xmlrpc'].'"> '.$blog['blogName'].' - '.$blog['xmlrpc'].'</input></p>';
 				}//end foreach
 				?>
 				<input type="hidden" name="user_login" id="user_login" value="<?php esc_attr_e($_REQUEST['user_login']); ?>"/>

@@ -17,7 +17,7 @@ br, input, button, textarea, h1, h2, h3, h4, h5, strong {
 	font-size: 100%;
 	font-family: Helvetica, Arial, Sans-Serif;
 	vertical-align: baseline;
-	background-color: white;
+	background-color: #EAEBEE;
 	color: #1f2126;
 	line-height: 1;
 	text-align: left;
@@ -125,7 +125,10 @@ div#frontforms input {
     background-color: #EAEBEE;
 }
 
-input#user_pass, input#user_login, input#site_url, input#uri, input#file, input#uploaded_file, input#keywords, input#short_desc, textarea {
+
+input#user_pass, input#user_login, input#site_url, input#user_agent,
+input#uri, input#file, input#uploaded_file, input#keywords, input#short_desc, textarea,
+input#HTTP_auth_user_pass, input#HTTP_auth_user_login{
 	font-family: Monaco, "Courier New", Monospace;
 	font-size: 0.9em;
 	border: 1px solid #bbb;
@@ -135,6 +138,10 @@ input#user_pass, input#user_login, input#site_url, input#uri, input#file, input#
 	padding: 0.2em 0.2em;
 	max-width: 1000px;
 	font-variant: normal;
+}
+
+input#user_agent:disabled {
+	background: #dddddd;
 }
 
 input#site_url, input#uri, input#file, input#uploaded_file {
@@ -187,7 +194,6 @@ p.submit_button input {
 	border-right: 2px solid #444;
 	border-top: 1px solid #aaa;
 	border-left: 1px solid #aaa;
-	background: #eee url(../images/grad.png) repeat-x top left;
 	cursor: pointer;
 }
 
@@ -740,7 +746,6 @@ div#don_program span#don_program_text a {font-weight: bold;}
 }
 
 #xmlrpc_validator_log_view_switcher {
-	float: right;
 	clear: both;
 	margin-right: 10px;
 	background-color: #EAEBEE;
