@@ -11,7 +11,7 @@ It's possible to launch the validator by passing parameters to it.
 Available parameter are _site_url_ and _user_agent_.
 EX: http://xmlrpc.eritreo.it?user_agent=my-user-agent-here&site_url=daniloercoli.com
 
-**Note:**
+**Note**
 Plugins and incompatible themes can also cause issues when using your site on a mobile app.
 There’s a list of known plugin conflicts here: http://ios.forums.wordpress.org/topic/app-blocking-plugin-list?replies=1#post-5985.
 
