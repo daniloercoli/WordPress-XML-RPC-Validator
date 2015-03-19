@@ -61,48 +61,48 @@ class xml_rpc_validator_utils {
 	$this->xml_rpc_validator_errors = array(
 		'NO_RSD_FOUND'		=> array(
 			'code'			=> 1000000,
-			'message'		=> __('Sorry, we cannot find your RSD Endpoint'),
-			'workaround'	=> 'link to a support page, sticky forum post with steps to fix it'
+			'message'		=> __('Sorry, we cannot find the RSD Endpoint link in the src code of the page. The RSD document contains the URL to the XML-RPC endpoint.'),
+			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-3'
 		),
 		'EMPTY_RSD'			=> array(
 			'code'			=> 1000001,
 			'message'		=> __('The RSD document is empty.'),
-			'workaround'	=> 'link to a support page, sticky forum post with steps to fix it'
+			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-3'
 		),
 		'MALFORMED_RSD'		=> array(
 			'code'			=> 1000002,
 			'message'		=> __('The RSD document is not well formed. There are characters before the xml preamble.'),
-			'workaround'	=> 'link to a support page, sticky forum post with steps to fix it'
+			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-3'
 		),
 		'NO_XMLRPC_IN_RSD_FOUND'		=> array(
 			'code'			=> 1000004,
 			'message'		=> __('We cannot find the XML-RPC Endpoint within the RSD document.'),
-			'workaround'	=> 'link to a support page, sticky forum post with steps to fix it'
+			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-3'
 		),
 		'MISSING_XMLRPC_METHODS'		=> array(
 			'code'			=> 1000005,
 			'message'		=> __('The following XML-RPC methods are missing from your site: '),
-			'workaround'	=> 'link to a support page, sticky forum post with steps to fix it'
+			'workaround'	=> 'Please upgrade your installation of WordPress on your site.'
 		),
 		'XMLRPC_RESPONSE_EMPTY'		=> array(
 			'code'			=> 1000006,
 			'message'		=> __('The XML-RPC response document is empty.'),
-			'workaround'	=> 'link to a support page, sticky forum post with steps to fix it'
+			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-4'
 		),
 		'XMLRPC_RESPONSE_MALFORMED_1'		=> array(
 			'code'			=> 1000007,
 			'message'		=> __('The XML-RPC response document is not well formed. There are characters before the xml preamble'),
-			'workaround'	=> 'link to a support page, sticky forum post with steps to fix it'
+			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-4'
 		),
 		'XMLRPC_RESPONSE_MALFORMED_2'		=> array(
 			'code'			=> 1000008,
 			'message'		=> __('Parse error. The XML-RPC response document is not well formed'),
-			'workaround'	=> 'link to a support page, sticky forum post with steps to fix it'
+			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-4'
 		),
 		'XMLRPC_RESPONSE_CONTAINS_INVALID_CHARACTERS'		=> array(
 			'code'			=> 1000009,
 			'message'		=> __('The XML-RPC response document contains characters outside the XML range'),
-			'workaround'	=> 'link to a support page, sticky forum post with steps to fix it'
+			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-4'
 		),
 		'CANNOT_CHECK_WP_VERSION'	=> array(
 			'code'			=> 1000010,
@@ -144,7 +144,64 @@ class xml_rpc_validator_utils {
 		}
 		return true;
 	}
-	
+
+	function logXML($io,$msg) {
+		if ($this->validator_logging) {
+			$date = gmdate("Y-m-d H:i:s ");
+			$iot = ($io == "I") ? " Input: " : " Output: ";
+
+			$this->logging_buffer.= '<tr><td>'.$date.'</td><td><pre>'.$this->xmlpp($msg, true).'</pre></td></tr>';
+
+			if ($this->logging_on_file) {
+				$fp = fopen( constant('XMLRPC_VALIDATOR_PLUGIN_DIR').'/validator.log',"a+" );
+				fwrite($fp, "\n\n".$date.$iot.$msg);
+				fclose($fp);
+			}
+		}
+		return true;
+	}
+
+	/** Prettifies an XML string into a human-readable and indented work of art
+	 *  @param string $xml The XML as a string
+	 *  @param boolean $html_output True if the output should be escaped (for use in HTML)
+	 */
+	function xmlpp($xml, $html_output=false) {
+		try {
+			$xml_obj = new SimpleXMLElement($xml);
+			$level = 4;
+			$indent = 0; // current indentation level
+			$pretty = array();
+
+			// get an array containing each XML element
+			$xml = explode("\n", preg_replace('/>\s*</', ">\n<", $xml_obj->asXML()));
+
+			// shift off opening XML tag if present
+			if (count($xml) && preg_match('/^<\?\s*xml/', $xml[0])) {
+				$pretty[] = array_shift($xml);
+			}
+
+			foreach ($xml as $el) {
+				if (preg_match('/^<([\w])+[^>\/]*>$/U', $el)) {
+					// opening tag, increase indent
+					$pretty[] = str_repeat(' ', $indent) . $el;
+					$indent += $level;
+				} else {
+					if (preg_match('/^<\/.+>$/', $el)) {
+						$indent -= $level;  // closing tag, decrease indent
+					}
+					if ($indent < 0) {
+						$indent += $level;
+					}
+					$pretty[] = str_repeat(' ', $indent) . $el;
+				}
+			}
+			$xml = implode("\n", $pretty);
+			return ($html_output) ? htmlentities($xml) : $xml;
+		} catch (Exception $e) {
+				return esc_html($xml);
+		}
+	}
+
 	function printErrors($wp_error = ''){
 	
 		if ( empty($wp_error) )
@@ -202,7 +259,7 @@ class xml_rpc_validator_utils {
 			}
 	
 			if ( !empty($errors_html) ) {
-				return '<table><tr><th>Code</th><th>Description</th><th>Addional Info</th><th>Workaround</th></tr>'
+				return '<table><tr><th>Code</th><th>Description</th><th>Additional Info</th><th>Workaround</th></tr>'
 				.$errors_html.'</table>';
 			}
 	
@@ -255,6 +312,12 @@ function xml_rpc_validator_logIO($io,$msg) {
 	$xml_rpc_validator_utils->logIO($io,$msg);
 }
 
+function xml_rpc_validator_logXML($io, $msg) {
+	global $xml_rpc_validator_utils;
+	$xml_rpc_validator_utils->logXML($io,$msg);
+}
+
+
 class Blog_Validator {
 	var $site_URL;
 	var $xmlrpc_endpoint_URL;
@@ -305,7 +368,7 @@ class Blog_Validator {
 			if( is_wp_error( $this->userBlogs ) ) {
 				return $this->userBlogs;
 			}
-			xml_rpc_validator_logIO("O", print_r ($this->userBlogs, TRUE));
+			//xml_rpc_validator_logIO("O", print_r ($this->userBlogs, TRUE));
 
 		}//end xmlrpc calls
 
@@ -345,17 +408,19 @@ class Blog_Validator {
 		if ($pos !== false) {
 			//use the url as-is
 			$this->xmlrpc_endpoint_URL = $this->site_URL;
+			xml_rpc_validator_logIO("O", "The string 'xmlrpc.php' found in the input URL '" .  $this->site_URL. "'. The validator will use the input URL as-is, without launching the XML-RPC discovery process.");
 		} else {
 			//try to guess the endpoint by appending the xmlrpc.php prefix
-			xml_rpc_validator_logIO("O", "try to guess the endpoint by appending the xmlrpc.php prefix");
+			xml_rpc_validator_logIO("O", "The validator will start the XML-RPC discovery process by using the URL '". $this->site_URL."' as base URL.");
 			$client = new wp_xmlrpc_client( rtrim($this->site_URL,' /').'/xmlrpc.php', false, $this->user_agent );
+			xml_rpc_validator_logIO("O", "The validator is going to the test following URL: ". $client->URL . ' by doing the XML-RPC call system.listMethods on it.');
 			if( ! empty( $this->HTTP_auth_user_login ) ) {
 				$client->setHTTPCredential($this->HTTP_auth_user_login, $this->HTTP_auth_user_pass);
 			}
 			$xmlArray = $client->open('system.listMethods', '');
 			
 			if( is_wp_error( $xmlArray ) ) {
-				xml_rpc_validator_logIO("O", "the validator haven't found the XML-RPC Endpoint by appending the xmlrpc.php prefix.");
+				xml_rpc_validator_logIO("O", "The validator hasn't found the XML-RPC Endpoint at the URL: " . $client->URL );
 				//start the discovery process
 				$RSD_link = $this->find_rsd_document_url( );
 				if( ! is_wp_error( $RSD_link ) ) {
@@ -370,7 +435,7 @@ class Blog_Validator {
 				}
 			} else {
 				// found the xmlrpc endpoint at the first tentative!!! hurraaa!
-				xml_rpc_validator_logIO("O", "the validator found the XML-RPC Endpoint by appending the xmlrpc.php prefix. GOOALL!!!");
+				xml_rpc_validator_logIO("O", "The validator has found the XML-RPC Endpoint at the URL: " . $client->URL );
 				$this->xmlrpc_endpoint_URL = rtrim($this->site_URL,' /').'/xmlrpc.php' ;
 			}
 		}
@@ -381,7 +446,7 @@ class Blog_Validator {
 			return new WP_Error( $error_obj['code'], $error_obj['message'] );
 		}
 		
-		xml_rpc_validator_logIO("O", "Checking the available XML-RPC methods...");
+		xml_rpc_validator_logIO("O", "Checking the available XML-RPC methods available at ".$this->xmlrpc_endpoint_URL);
 		$allMethodsAreAvailable = $this->checkAvailableMethods();
 		if( is_wp_error( $allMethodsAreAvailable ) ) {
 			return $allMethodsAreAvailable;
@@ -395,7 +460,7 @@ class Blog_Validator {
 		}
 
 		$this->userBlogs = $client->open('wp.getUsersBlogs', 'test', 'test');
-		xml_rpc_validator_logIO("O", print_r ($this->userBlogs, TRUE));
+		//xml_rpc_validator_logIO("O", print_r ($this->userBlogs, TRUE));
 		if( is_wp_error( $this->userBlogs ) ) {
 			if($this->userBlogs->get_error_code() != '403')
 			return $this->userBlogs;
@@ -411,14 +476,14 @@ class Blog_Validator {
 	private function find_rsd_document_url() {
 		global $xml_rpc_validator_errors;
 		$rsdURL;
-		xml_rpc_validator_logIO("O", "Downloading the HTML of the page...");
+		xml_rpc_validator_logIO("O", "The validator is going to downloading the HTML page available at the URL " .$this->site_URL.' Inside the HTML code should be available the link to the RSD document.' );
 		//download the HTML code
 		$headers = array( 'Accept' => 'text/html');
 		$response = $this->downloadContent($this->site_URL, $headers);
 		if( is_wp_error( $response ) ) {
 			return $response;
 		} else {
-			xml_rpc_validator_logIO("O", "Parsing the HTML document trying to match the RSD Endpoint declatation...");
+			xml_rpc_validator_logIO("O", "Parsing the HTML response document trying to match the RSD Endpoint declaration...");
 			//find the RSD endpoint URL
 			$match = array();
 			$dom = new DOMDocument();
@@ -433,6 +498,7 @@ class Blog_Validator {
 
 		if(!isset($rsdURL)){
 			$error_obj = $xml_rpc_validator_errors['NO_RSD_FOUND'];
+			xml_rpc_validator_logIO("O", "RSD document NOT found!!");
 			return new WP_Error( $error_obj['code'], $error_obj['message'] );
 		}
 
@@ -443,7 +509,7 @@ class Blog_Validator {
 
 	private function findXMLRPCEndpointFromRSDlink($rsdURL) {
 		global $xml_rpc_validator_errors;
-		xml_rpc_validator_logIO("O", "Downloading the RSD document...");
+		xml_rpc_validator_logIO("O", "The RSD document was found at the following URL ".$rsdURL." Downloading the RSD document content. Inside the RSD document there is the link to the XML-RPC endpoint.");
 		$xmlrpcURL;
 		$headers = array( 'Accept' => 'text/xml');
 		$response = $this->downloadContent($rsdURL, $headers);
@@ -478,9 +544,10 @@ class Blog_Validator {
 
 		if(!isset($xmlrpcURL)){
 			$error_obj = $xml_rpc_validator_errors['NO_XMLRPC_IN_RSD_FOUND'];
+			xml_rpc_validator_logIO("O", "NO  XML-RPC endpoint found!!");
 			return new WP_Error( $error_obj['code'], $error_obj['message'] );
 		}
-		xml_rpc_validator_logIO("O", "Found the XML-RPC endpoint URL at:". print_r ($xmlrpcURL, TRUE));
+		xml_rpc_validator_logIO("O", "Found the XML-RPC endpoint at:". print_r ($xmlrpcURL, TRUE));
 		return $xmlrpcURL;
 	}
 
@@ -500,7 +567,7 @@ class Blog_Validator {
 	
 	private function downloadContent($URL, $args = array()) {
 		global $xml_rpc_validator_errors;
-		xml_rpc_validator_logIO("I", 'Opening URL '.$URL);
+		xml_rpc_validator_logIO("I", 'Doing a simple HTTP GET request on the following URL '.$URL);
 
 		$headers = array();
 		$headers['User-Agent']	= $this->user_agent;
@@ -536,8 +603,8 @@ class Blog_Validator {
 			return $response;
 		} 
 		
-		xml_rpc_validator_logIO("O", "HTTP Response Header: " .print_r ($response['headers'], TRUE));
-		xml_rpc_validator_logIO("O", "HTTP Response Code: " .print_r ($response['response'], TRUE));
+		xml_rpc_validator_logIO("O", "HTTP Response Headers: " .print_r ($response['headers'], TRUE));
+		xml_rpc_validator_logIO("O", "HTTP Response Codes: " .print_r ($response['response'], TRUE));
 		
 		if ( strcmp( $response['response']['code'], '200' ) != 0 ) {
 			return  new WP_Error($response['response']['code'], $response['response']['message']);
@@ -701,25 +768,33 @@ class wp_xmlrpc_client  {
 		$requestParameter['body'] = $xml;
 		$requestParameter['timeout'] = REQUEST_HTTP_TIMEOUT;
 
-		
+		xml_rpc_validator_logIO("I", "HTTP Request headers: ". print_r ( $this->headers, TRUE));
+
+		xml_rpc_validator_logIO("I", "XML-RPC Request: ");
 		if ( strpos($method, 'metaWeblog.newMediaObject') === false ) //do not log the whole picture upload request document
-			xml_rpc_validator_logIO("I", "xmlrpc request: ". print_r ($requestParameter, TRUE));
-		else 
-			xml_rpc_validator_logIO("I", "xmlrpc request: ". print_r ( substr($xml, 0, 100) , TRUE));
+			xml_rpc_validator_logXML("I", $xml);
+		else
+			xml_rpc_validator_logXML("I", substr($xml, 0, 100) );
 
 		$xmlrpc_request = new WP_Http;
 		$this->response = $xmlrpc_request->request( $this->URL, $requestParameter);
 
-		xml_rpc_validator_logIO("O", "Download response:\n". print_r ($this->response, TRUE));
+		xml_rpc_validator_logIO("O", "Response details below ->");
+		//xml_rpc_validator_logIO("O", "RAW response:     ". print_r ($this->response, TRUE));
+		xml_rpc_validator_logIO("O", "HTTP Response code: ". print_r ($this->response['response']['code']. ' - '. $this->response['response']['message'], TRUE));
+		xml_rpc_validator_logIO("O", "HTTP Response headers: ". print_r ( $this->response['headers'], TRUE));
 
 		// Handle error here.
 		if( is_wp_error( $this->response ) ) {
 			return $this->response;
 		} elseif ( strcmp($this->response['response']['code'], '200') != 0 ) {
-			return  new WP_Error($this->response['response']['code'], $this->response['response']['message']);
+			return new WP_Error($this->response['response']['code'], $this->response['response']['message']);
 		}
 
+		xml_rpc_validator_logIO("O", "HTTP Response Body:", TRUE);
 		$contents = trim($this->response['body']);
+		xml_rpc_validator_logXML("O", $contents);
+
 		if(empty($contents)){
 			$error_obj = $xml_rpc_validator_errors['MISSING_XMLRPC_METHODS'];
 			$this->error = new WP_Error( $error_obj['code'], $error_obj['message'] );

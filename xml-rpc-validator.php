@@ -10,7 +10,7 @@ Plugin URI:
 */
 
 //TODO remove these lines in production
-//ini_set("display_errors", TRUE); 
+//ini_set("display_errors", TRUE);
 /*enabling logging of errors*/
 ini_set("log_errors", TRUE);
 ini_set('display_startup_errors',TRUE);
