@@ -1,12 +1,6 @@
 <?php
-//TODO remove these lines in production
-ini_set("display_errors", FALSE);
+require_once 'commons.php';
 
-
-if ( ! function_exists( 'add_action' ) ) {
-	require_once("../../../wp-config.php");
-	require_once 'commons.php';
-}
 $xml_rpc_validator_utils->logging_buffer = ''; //reset the logging buffer on each ajax request
 
 // check security

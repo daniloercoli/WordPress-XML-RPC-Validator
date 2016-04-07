@@ -130,11 +130,12 @@ var xml_rpc_validator = {
 			
 			xml_rpc_validator.request = jq.ajax({
 				    type: "POST",
-				    url: XML_RPC_Setting.plugin_url + 'xml-rpc-validator-ajax.php',
+				    url: XML_RPC_Setting.plugin_url,
 				    timeout: 30000,				    
 				    data: {
 				    	xmlrpc_url: url,
 				        method_name : call_obj['xmlrpc_call'],
+						action : 'ajax_calls',
 				        _ajax_nonce: XML_RPC_Setting.nonce,
 				        user_login: jq( '#user_login').val(),
 						user_pass: jq( '#user_pass').val(),

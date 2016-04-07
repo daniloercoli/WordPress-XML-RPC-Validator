@@ -55,9 +55,8 @@ class xml_rpc_validator_utils {
 		'405'	=>  'link to a support page, sticky forum post with steps to fix it',
 		'412'	=>	'link to a support page, sticky forum post with steps to fix it'
 	);
-		
-	function xml_rpc_validator_utils()
-	{
+
+	function __construct() {
 	$this->xml_rpc_validator_errors = array(
 		'NO_RSD_FOUND'		=> array(
 			'code'			=> 1000000,
@@ -335,8 +334,9 @@ class Blog_Validator {
 
 	//The user agent to set on requestes
 	var $user_agent = USER_AGENT;
-	
-	function Blog_Validator ($URL) {
+
+
+	function __construct($URL) {
 		$this->site_URL = $URL;
 	}
 
@@ -728,7 +728,7 @@ class wp_xmlrpc_client  {
 		$this->HTTP_auth_user_pass = $pass;
 	}
 
-	function wp_xmlrpc_client($URL, $timeout = false, $useragent = false) {
+	function __construct($URL, $timeout = false, $useragent = false) {
 		$this->URL = $URL;
 		$this->timeout = $timeout;
 

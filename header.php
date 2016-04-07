@@ -14,7 +14,7 @@ $nonce = wp_create_nonce('xml-rpc-ajax-nonce');
 wp_enqueue_script('jquery');
 wp_enqueue_script('xml-rpc-validator-script', constant( 'XMLRPC_VALIDATOR__PLUGIN_URL' ).'/xml-rpc-validator.js', array('jquery'));
 // pass parameters to JavaScript
-wp_localize_script('xml-rpc-validator-script', 'XML_RPC_Setting', array('plugin_url' => constant( 'XMLRPC_VALIDATOR__PLUGIN_URL' ).'/', 'nonce' => $nonce));
+wp_localize_script('xml-rpc-validator-script', 'XML_RPC_Setting', array('plugin_url' => constant( 'XMLRPC_VALIDATOR__SITE_URL' ).'/', 'nonce' => $nonce));
 
 if ( $ua_info->is_blackbeberry() ){ ?>
 <!-- detected a BB device -->

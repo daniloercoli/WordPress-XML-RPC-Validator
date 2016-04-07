@@ -31,7 +31,7 @@ class UserAgentInfo {
 	);
 	
    //The constructor. Initializes default variables.
-   function UserAgentInfo()
+   function __construct()
    { 	
    		if ( !empty( $_SERVER['HTTP_USER_AGENT'] ) ) 
        		$this->useragent = strtolower( $_SERVER['HTTP_USER_AGENT'] );

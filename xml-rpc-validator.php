@@ -9,13 +9,6 @@ Author URI:
 Plugin URI:
 */
 
-//TODO remove these lines in production
-//ini_set("display_errors", TRUE);
-/*enabling logging of errors*/
-ini_set("log_errors", TRUE);
-ini_set('display_startup_errors',TRUE);
-error_reporting(E_ALL);
-
 global $wp_version;
 $exit_msg='XML-RPC validator requires WordPress 3.0 or newer. <a href="http://codex.wordpress.org/Upgrading_WordPress">Please update!</a>';
 if (version_compare($wp_version,"3.0","<"))
@@ -28,6 +21,7 @@ if (version_compare($wp_version,"3.0","<"))
  */
 define( 'XMLRPC_VALIDATOR_PLUGIN_DIR', dirname( __FILE__ ) );
 define( 'XMLRPC_VALIDATOR__PLUGIN_URL', plugins_url() . '/' . wp_basename( dirname( __FILE__ ) ) );
+define( 'XMLRPC_VALIDATOR__SITE_URL', get_site_url() );
 
 require_once 'commons.php';
 
@@ -36,7 +30,11 @@ function get_custom_page_template($single_template) {
 	// get our pageId
 	$pageId = $options['pageId'];
 	if (get_the_ID() === $pageId) {
-		$single_template = dirname( __FILE__ ) . '/page.php';
+		if( isset($_REQUEST['action']) &&  $_REQUEST['action'] == 'ajax_calls' ) {
+			$single_template = dirname( __FILE__ ) . '/xml-rpc-validator-ajax.php';
+		} else {
+			$single_template = dirname( __FILE__ ) . '/page.php';
+		}
 	}
 	return $single_template;
 }
