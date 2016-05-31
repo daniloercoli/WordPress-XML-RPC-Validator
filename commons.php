@@ -762,7 +762,6 @@ class wp_xmlrpc_client  {
 			$this->headers['Authorization'] = 'Basic '.base64_encode($this->HTTP_auth_user_login.':'.$this->HTTP_auth_user_pass) ;
 		}
 
-		$requestParameter = array();
 		$requestParameter = array('headers' => $this->headers);
 		$requestParameter['method'] = 'POST';
 		$requestParameter['body'] = $xml;
@@ -779,15 +778,18 @@ class wp_xmlrpc_client  {
 		$xmlrpc_request = new WP_Http;
 		$this->response = $xmlrpc_request->request( $this->URL, $requestParameter);
 
-		xml_rpc_validator_logIO("O", "Response details below ->");
 		//xml_rpc_validator_logIO("O", "RAW response:     ". print_r ($this->response, TRUE));
-		xml_rpc_validator_logIO("O", "HTTP Response code: ". print_r ($this->response['response']['code']. ' - '. $this->response['response']['message'], TRUE));
-		xml_rpc_validator_logIO("O", "HTTP Response headers: ". print_r ( $this->response['headers'], TRUE));
 
 		// Handle error here.
 		if( is_wp_error( $this->response ) ) {
 			return $this->response;
-		} elseif ( strcmp($this->response['response']['code'], '200') != 0 ) {
+		}
+
+		xml_rpc_validator_logIO("O", "Response details below ->");
+		xml_rpc_validator_logIO("O", "HTTP Response code: ". print_r ($this->response['response']['code']. ' - '. $this->response['response']['message'], TRUE));
+		xml_rpc_validator_logIO("O", "HTTP Response headers: ". print_r ( $this->response['headers'], TRUE));
+
+		if ( strcmp($this->response['response']['code'], '200') != 0 ) {
 			return new WP_Error($this->response['response']['code'], $this->response['response']['message']);
 		}
 
