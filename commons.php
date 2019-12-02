@@ -50,33 +50,40 @@ class xml_rpc_validator_utils {
 	var $logging_on_file = 0;
 	var $logging_buffer = '';
 	var $xml_rpc_validator_errors = null;
+	var $default_error_message =  'We encourage you to visit the support page for troubleshooting help. '.
+								  '<a href="https://apps.wordpress.com/support/">Link to Mobile Apps Support Page.</a>';
 	var $xml_rpc_server_errors = array(
-		'401'	=>  'link to a support page, sticky forum post with steps to fix it',
-		'405'	=>  'link to a support page, sticky forum post with steps to fix it',
-		'412'	=>	'link to a support page, sticky forum post with steps to fix it'
+		'401'	=>  '<a href="https://apps.wordpress.com/support/">Link to Mobile Apps Support Page.</a>',
+		'405'	=>  '<a href="https://apps.wordpress.com/support/">Link to Mobile Apps Support Page.</a>',
+		'412'	=>  '<a href="https://apps.wordpress.com/support/">Link to Mobile Apps Support Page.</a>'
 	);
 
 	function __construct() {
 	$this->xml_rpc_validator_errors = array(
+		'USERNAME_OR_PASS_ERROR'		=> array(
+			'code'			=> 403,
+			'message'		=> '',
+			'workaround'	=> ''
+		),
 		'NO_RSD_FOUND'		=> array(
 			'code'			=> 1000000,
 			'message'		=> __('Sorry, we cannot find the RSD Endpoint link in the src code of the page. The RSD document contains the URL to the XML-RPC endpoint.'),
-			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-3'
+			'workaround'	=> $this->default_error_message
 		),
 		'EMPTY_RSD'			=> array(
 			'code'			=> 1000001,
 			'message'		=> __('The RSD document is empty.'),
-			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-3'
+			'workaround'	=> $this->default_error_message
 		),
 		'MALFORMED_RSD'		=> array(
 			'code'			=> 1000002,
 			'message'		=> __('The RSD document is not well formed. There are characters before the xml preamble.'),
-			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-3'
+			'workaround'	=> $this->default_error_message
 		),
 		'NO_XMLRPC_IN_RSD_FOUND'		=> array(
 			'code'			=> 1000004,
 			'message'		=> __('We cannot find the XML-RPC Endpoint within the RSD document.'),
-			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-3'
+			'workaround'	=> $this->default_error_message
 		),
 		'MISSING_XMLRPC_METHODS'		=> array(
 			'code'			=> 1000005,
@@ -86,27 +93,27 @@ class xml_rpc_validator_utils {
 		'XMLRPC_RESPONSE_EMPTY'		=> array(
 			'code'			=> 1000006,
 			'message'		=> __('The XML-RPC response document is empty.'),
-			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-4'
+			'workaround'	=> $this->default_error_message
 		),
 		'XMLRPC_RESPONSE_MALFORMED_1'		=> array(
 			'code'			=> 1000007,
 			'message'		=> __('The XML-RPC response document is not well formed. There are characters before the xml preamble'),
-			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-4'
+			'workaround'	=> $this->default_error_message
 		),
 		'XMLRPC_RESPONSE_MALFORMED_2'		=> array(
 			'code'			=> 1000008,
 			'message'		=> __('Parse error. The XML-RPC response document is not well formed'),
-			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-4'
+			'workaround'	=> $this->default_error_message
 		),
 		'XMLRPC_RESPONSE_CONTAINS_INVALID_CHARACTERS'		=> array(
 			'code'			=> 1000009,
 			'message'		=> __('The XML-RPC response document contains characters outside the XML range'),
-			'workaround'	=> 'https://apps.wordpress.org/support/#faq-ios-4'
+			'workaround'	=> $this->default_error_message
 		),
 		'CANNOT_CHECK_WP_VERSION'	=> array(
 			'code'			=> 1000010,
 			'message'		=> __('Can\'t check your WordPress version'),
-			'workaround'	=> 'link to a support page, sticky forum post with steps to fix it'
+			'workaround'	=> $this->default_error_message
 		),
 		'NEW_WP_VERSION_AVAILABLE'	=> array(
 			'code'			=> 1000011,
@@ -208,7 +215,6 @@ class xml_rpc_validator_utils {
 	
 		if ( $wp_error->get_error_code() ) {
 			$errors_html = '';
-	
 			foreach ( $wp_error->get_error_codes() as $code ) {
 				$errors_html .= '<tr>';
 				$errors_html .= '<td>'.$code.'</td>';
@@ -247,11 +253,10 @@ class xml_rpc_validator_utils {
 					}
 				}
 				
-				if ( !empty($workorund_html) )
+				if ( isset($workorund_html) )
 					$errors_html .= $workorund_html;
 				else 
-					$errors_html .= 'Sorry, there isn\'t a FAQ for this issue. Please seach within the forum or post a new thread.
-					If you aready solved this issue you can propose a fix by clicking on this link';
+					$errors_html .=	$this->default_error_message;
 				
 				$errors_html .= '</td>';
 				$errors_html .= '</tr>';
