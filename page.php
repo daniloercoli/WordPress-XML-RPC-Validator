@@ -5,10 +5,12 @@ $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'home';
 // validate action so as to default input screen
 if ( ! in_array( $action, array( 'home', 'check_step1', 'check_step2' ), true ) )
 	$action = 'home';
+//check if we need to by-pass the home screen: this means &auto_check is in the request
+$auto_check = isset( $_GET['auto_check'] ) && $_GET['auto_check'] === 'true' ? true : false;
 
 ?> <div id="xmlrpc_validator_main"> <?php
- 	
-if ( 'home' == $action ) :
+
+if ( 'home' == $action && !$auto_check ) :
 
 	if ( function_exists('wp_nonce_field') )
 		$nonce_content = wp_nonce_field('checkstep1', 'name_of_nonce_field_checkstep1',true, false);
@@ -72,10 +74,10 @@ if ( 'home' == $action ) :
 		<input type="hidden" name="action" value="check_step1"/>
 	</form>
 <?php 
-elseif ( 'check_step1' == $action ) : //2nd page
+elseif ( 'check_step1' == $action || ('home' == $action && $auto_check) ) : //2nd page
 		$permalink = get_permalink( get_the_ID() );
 		$pre_check_error_message = null;
-		if ( !wp_verify_nonce($_REQUEST['name_of_nonce_field_checkstep1'], 'checkstep1') ) {
+		if (!$auto_check && !wp_verify_nonce($_REQUEST['name_of_nonce_field_checkstep1'], 'checkstep1') ) {
 			$pre_check_error_message = "Sorry, your nonce did not verify.";
 		} else {
 			//check the URL here
@@ -101,7 +103,7 @@ elseif ( 'check_step1' == $action ) : //2nd page
 			$client = new Blog_Validator( esc_url_raw( $_REQUEST['site_url'] ) );
 			$site_url = esc_url($unescaped_site_url);
 			//Set the UserAgent
-			$user_agent_selected = esc_attr( $_REQUEST['user_agent'] );
+			$user_agent_selected = isset( $_REQUEST['user_agent'] ) ? esc_attr( $_REQUEST['user_agent'] ) : esc_attr( "WordPress XML-RPC Client" );
 			$client -> setUserAgent($user_agent_selected);
 			//Enable the HTTP Auth if selected
 			$enable_401_auth= ! empty( $_REQUEST['enable_401_auth'] );
