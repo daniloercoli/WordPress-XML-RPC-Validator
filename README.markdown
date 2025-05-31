@@ -14,7 +14,6 @@ EX: http://xmlrpc.eritreo.it?user_agent=my-user-agent-here&site_url=daniloercoli
 **Note**
 
 Plugins and incompatible themes can also cause issues when using your site on a mobile app.
-There’s a list of known plugin conflicts here: http://ios.forums.wordpress.org/topic/app-blocking-plugin-list?replies=1#post-5985.
 
 If deactivating all the plugins doesn’t help then suggest they try a default theme. Also check what user role they’re signing in with.
 Sometimes signing in as an unusual user (something other than administrator) can cause strange things with the app.
